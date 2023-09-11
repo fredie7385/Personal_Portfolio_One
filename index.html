@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,15 +12,17 @@
     <div id="header">
         <div class="container">
             <nav>
-                <img src="images/logo.png" class="logo">
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">ABout</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">Portfolio</a></li>
-                    <li><a href="#">Contact</a></li>
+                <img src="images/logo.png" class="logo" alt="image">
+                <ul id="side-menu">
+                    <li><a href="#header">Home</a></li>
+                    <li><a href="#about">ABout</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#portfolio">Portfolio</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                   
+                    <i class="fa-solid fa-xmark" onclick="closeMenu()"></i>
                 </ul>
-                <i class="fa-solid fa-bars"></i>
+                <i class="fa-solid fa-bars" onclick="openMenu()"></i>
             </nav>
             <div class="header-text">
                 <p>Ui/UX Designer</p>
@@ -81,7 +83,7 @@
         </div>
     </div>
     <!--service -->
-    <div class="services">
+    <div class="services" id="services">
         <div class="container">
             <h1 class="sub-title">My Services</h1>
             <div class="services-list">
@@ -168,12 +170,14 @@
                     <a href="images/my-cv.pdf" download class= 'btn btn-2'>Download CV</a>             
                 </div>
                 <div class="contact-right">
-                    <form action="" method="post">
+                    <form name="submit-to-google-sheet" method="post">
                         <input type="text" name="Name" placeholder="Your Name" required>
                         <input type="email" name="Email" placeholder="Your Email" required>
-                        <textarea name="message"  rows="6" placeholder="Your Message"></textarea>
+                        <textarea name="Message"  rows="6" placeholder="Your Message"></textarea>
                         <button type="submit" class=" btn btn-2 ">Submit</button>
-                    </form>
+                    </form> <br><br>
+                    <span id="msg"></span>
+                    
                 </div>
             </div>
         </div>
@@ -197,5 +201,38 @@
     event.currentTarget.classList.add('active-link');
     document.getElementById(tabName).classList.add('active-tab');}
    </script> 
+
+   <!--    javascript opening and closing side menu -->
+   <script>
+    var sideMenu = document.getElementById('side-menu');
+
+    function openMenu(){
+        sideMenu.style.right ='0';
+    }
+    function closeMenu(){
+        sideMenu.style.right ='-200';
+    }
+   </script>
+
+   <!---fetching data from the web page and storing it ti the google sheets-->
+   <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbz6SlZ6cCmEQ5-w8RibFCpFOrYD9Cf-UF4IF4nG8M4CYrrU2c0gqY8e6DVyq7DWiIO3/exec'
+    const form = document.forms['submit-to-google-sheet']
+    const msg = document.getElementById('msg')
+  
+    form.addEventListener('submit', e => {
+      e.preventDefault()
+      fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+      .then(response =>{
+       msg.innerHTML ="Message sent successfully"
+       setTimeout(function(){
+        msg.innerHTML =''
+       }, 3000)
+       form.reset()
+      })  
+        .catch(error => console.error('Error!', error.message))
+    })
+  </script>
+   
 </body>
 </html>
